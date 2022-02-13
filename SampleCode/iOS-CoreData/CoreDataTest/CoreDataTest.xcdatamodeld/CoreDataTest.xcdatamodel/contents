@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="TeamResult" representedClassName="TeamResult" syncable="YES" codeGenerationType="class">
+        <attribute name="alliance" attributeType="String" regularExpressionString="(red|blue)"/>
+        <attribute name="canDefend" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="hangLevel" attributeType="Integer 16" minValueString="0" maxValueString="4" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="highGoalPoints" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lowGoalPoints" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="matchDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="teamName" attributeType="String"/>
+    </entity>
+    <elements>
+        <element name="TeamResult" positionX="-63" positionY="-18" width="128" height="134"/>
+    </elements>
+</model>
