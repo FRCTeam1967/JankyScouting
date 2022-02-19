@@ -31,6 +31,7 @@
 		611756B927B2190B00C055D1 /* TeamSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSummary.swift; sourceTree = "<group>"; };
 		611756BB27B4AE5100C055D1 /* ExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportView.swift; sourceTree = "<group>"; };
 		611756BD27B4C32900C055D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6146FF6E27BC9A11004351E0 /* CoreDataTestv2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataTestv2.xcdatamodel; sourceTree = "<group>"; };
 		61C3E4A327AA00C9003B00E2 /* CoreDataTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreDataTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C3E4A627AA00C9003B00E2 /* CoreDataTestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestApp.swift; sourceTree = "<group>"; };
 		61C3E4A827AA00C9003B00E2 /* ResultsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsListView.swift; sourceTree = "<group>"; };
@@ -388,9 +389,10 @@
 		61C3E4B127AA00CA003B00E2 /* CoreDataTest.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				6146FF6E27BC9A11004351E0 /* CoreDataTestv2.xcdatamodel */,
 				61C3E4B227AA00CA003B00E2 /* CoreDataTest.xcdatamodel */,
 			);
-			currentVersion = 61C3E4B227AA00CA003B00E2 /* CoreDataTest.xcdatamodel */;
+			currentVersion = 6146FF6E27BC9A11004351E0 /* CoreDataTestv2.xcdatamodel */;
 			path = CoreDataTest.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

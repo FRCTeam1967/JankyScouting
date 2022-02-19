@@ -32,7 +32,7 @@ struct MainMenuView: View {
                     }
                     Section("View stats by team") {
                         NavigationLink("Analysis") {
-                            TeamListView()
+                             TeamListView()
                         }
                     }
                     Section("Data Export") {
@@ -85,7 +85,9 @@ struct MainMenuView: View {
     func deleteAllRecords() {
         do {
             // There's probably a better way to do this
-            let fetchRequest = NSFetchRequest<TeamResult>(entityName: "TeamResult")
+            // We have Team setup to cascade-delete any results (since a result *must* point to a team), so we
+            // don't need to worry about the TeamResult records.
+            let fetchRequest = NSFetchRequest<Team>(entityName: "Team")
             fetchRequest.returnsObjectsAsFaults = true // Don't fault in the data
             let results = try viewContext.fetch(fetchRequest)
             for item in results {
@@ -103,11 +105,18 @@ struct MainMenuView: View {
     
     func generateFakeRecords() {
         for _ in 1...50 {
-            let teamName = "\(Int.random(in: 1...3000))"
+            let team = Team(context: viewContext)
+            team.teamNumber = Int16.random(in: 1...5000)
+            
+            // Since names are optional, don't give some of them a name
+            if Int.random(in: 1...10) > 1 {
+                team.teamName = "Team \(team.teamNumber)"
+            }
+
             // We need some duplicates otherwise the averages view doesn't do anything useful
             for _ in 1...3 {
                 let newResult = TeamResult(context: viewContext)
-                newResult.teamName = teamName
+                newResult.team = team
                 newResult.alliance = Bool.random() ? "red" : "blue"
                 newResult.hangLevel = Int16.random(in: 0...4)
                 newResult.canDefend = Bool.random()

@@ -11,14 +11,14 @@ import SwiftUI
 
 extension TeamResult {
     static func appendCSVHeader(toFile file: FileHandle) {
-        let headerData = "Team Name, Match Date, Can Defend, Low Goal Points, High Goal Points, Hang Level, Alliance\n".data(using: .utf8)
+        let headerData = "Team Name, Team Number, Match Date, Can Defend, Low Goal Points, High Goal Points, Hang Level, Alliance\n".data(using: .utf8)
         if let headerData = headerData {
             try! file.write(contentsOf: headerData)
         }
     }
 
     func appendCSV(toFile file: FileHandle) {
-        let csvRow = "\(teamName!), \(matchDate!), \(canDefend), \(lowGoalPoints), \(highGoalPoints), \(hangLevel), \(alliance!)\n"
+        let csvRow = "\(team!.teamName ?? ""), \(team!.teamNumber), \(matchDate!), \(canDefend), \(lowGoalPoints), \(highGoalPoints), \(hangLevel), \(alliance!)\n"
         let csvData = csvRow.data(using: .utf8)
         if let csvData = csvData {
             try! file.write(contentsOf: csvData)

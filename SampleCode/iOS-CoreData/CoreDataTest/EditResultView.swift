@@ -29,7 +29,10 @@ struct EditResultView: View {
         VStack {
             Form {
                 Section {
-                    TextField("Team Name", text:Binding($result.teamName, ""))
+                    Group {
+                        Text("Team: \(result.team!.displayName)")
+                        Text("Team Number: \(result.team!.teamNumber)")
+                    }
                 } header: {
                     Text("Team")
                 }
@@ -99,14 +102,18 @@ struct EditView_Previews: PreviewProvider {
     static let moc = PersistenceController.preview.container.viewContext
 
     static var previews: some View {
+        let team = Team(context: moc)
+        team.teamName = "The Janksters"
+        team.teamNumber = 1967
+
         let result = TeamResult(context: moc)
-        result.teamName = "1967"
         result.matchDate = Date.now
         result.lowGoalPoints = 42
         result.highGoalPoints = 84
         result.canDefend = true
         result.hangLevel = 3
         result.alliance = "blue"
+        result.team = team
 
         return NavigationView {
             EditResultView(result: result)

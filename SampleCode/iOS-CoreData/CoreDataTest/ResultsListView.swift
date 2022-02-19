@@ -16,18 +16,18 @@ struct ResultsListView: View {
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \TeamResult.matchDate, ascending: true)],
         animation: .default)
-    private var items: FetchedResults<TeamResult>
+    private var results: FetchedResults<TeamResult>
 
     var body: some View {
         List {
-            ForEach(items) { item in
+            ForEach(results) { result in
                 NavigationLink {
-                    EditResultView(result: item)
+                    EditResultView(result: result)
                 } label: {
                     HStack {
-                        Text("Team \(item.teamName!)")
+                        Text("\(result.team!.displayName)")
                         Spacer()
-                        Text("\(item.matchDate!.formatted())")
+                        Text("\(result.matchDate!.formatted())")
                     }
                 }
             }
@@ -55,7 +55,7 @@ struct ResultsListView: View {
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+            offsets.map { results[$0] }.forEach(viewContext.delete)
 
             do {
                 try viewContext.save()

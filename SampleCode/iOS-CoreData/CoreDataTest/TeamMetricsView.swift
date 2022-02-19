@@ -9,32 +9,18 @@ import CoreData
 import os.log
 import SwiftUI
 
-// Helper extension to generate our fetch request.
-extension TeamResult {
-    static func teamResultsFetchRequest(teamName: String) -> NSFetchRequest<TeamResult> {
-        let request: NSFetchRequest<TeamResult> = TeamResult.fetchRequest()
-        request.predicate = NSPredicate(format: "teamName == %@", teamName)
-
-        return request
-    }
-}
-
 struct TeamMetricsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    // fetch request property wrapper. I believe this automatically updates when the data store changes.
-    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "teamName == ''"), animation: .default)
-    private var results: FetchedResults<TeamResult>
-
     private var logger = Logger()
-    private var teamName = ""
+    private var team: Team
     
-    init(teamName name: String) {
-        teamName = name
+    init(team teamToView: Team) {
+        team = teamToView
     }
     
     var body: some View {
-        let teamSummary = TeamSummary(fromFetchResults: results)
+        let teamSummary = TeamSummary(fromTeam: team)
         
         return List {
             Section("Hanger Zone") {
@@ -50,18 +36,14 @@ struct TeamMetricsView: View {
                 Text("Best score: \(teamSummary.maxHighGoalPoints) points")
             }
         }
-        .navigationTitle("Team \(teamName) Analysis")
-        .onAppear {
-            // Update the fetch request with the real predicate
-            results.nsPredicate = NSPredicate(format: "teamName == %@", teamName)
-        }
+        .navigationTitle("\(team.displayName) Analysis")
     }
 }
     
-struct SummaryDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            TeamMetricsView(teamName: "1").environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-        }
-    }
-}
+//struct SummaryDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            TeamMetricsView(teamName: "1").environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+//        }
+//    }
+//}

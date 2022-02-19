@@ -9,17 +9,38 @@ import CoreData
 import os.log
 import SwiftUI
 
+extension Team {
+    static func existingTeam(withNumber teamNumber: Int16, context: NSManagedObjectContext) -> Team? {
+        // Find the team given by the team number
+        let fetchRequest = NSFetchRequest<Team>(entityName: "Team")
+        fetchRequest.predicate = NSPredicate(format: "teamNumber = %d", teamNumber)
+        let results = try? context.fetch(fetchRequest)
+        
+        if let results = results {
+            // Return what should be the only matching team
+            return results[0]
+        }
+        
+        return nil
+    }
+}
+
 struct AddResultView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) var dismiss
 
-    @State private var teamName = "1967"
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.teamNumber)], predicate: nil, animation: .default)
+    private var allTeams: FetchedResults<Team>
+
+    @State private var teamName = "Janksters"
+    @State private var teamNumber : Int16 = 1967
     @State private var alliance = "red"
     @State private var canDefend = true
     @State private var matchDate = Date.now
     @State private var hangLevel = 1
     @State private var lowGoalPoints = 2
     @State private var highGoalPoints = 3
+    @State private var team : Team?
     
     private var logger = Logger()
     
@@ -27,9 +48,20 @@ struct AddResultView: View {
         VStack {
             Form {
                 Section {
-                    TextField("Team Name", text: $teamName)
+                    Picker("Team", selection: $team) {
+                        Text("New Team").tag(nil as Team?)
+                        ForEach(allTeams, id: \.self) { team in
+                            Text("\(team.teamNumber) (\(team.displayName))").tag(team as Team?)
+                        }
+                    }
+                    if (team == nil) {
+                        Group {
+                            TextField("Team Name", text: $teamName)
+                            TextField("Team Number", value: $teamNumber, format: .number)
+                        }
+                    }
                 } header: {
-                    Text("Team")
+                    Text("Choose an existing team, or create a new one")
                 }
                 Section {
                     DatePicker("Match date", selection: $matchDate, displayedComponents: .date)
@@ -74,18 +106,64 @@ struct AddResultView: View {
         }
         .navigationTitle("New Report")
     }
+    
+    func findExistingTeam() -> Team {
+        // Find the team given by the team number, or create a new one
+        let fetchRequest = NSFetchRequest<Team>(entityName: "Team")
+        fetchRequest.predicate = NSPredicate(format: "teamNumber = %d", teamNumber)
+        let results = try? viewContext.fetch(fetchRequest)
+        
+        if let results = results {
+            // Return what should be the only matching team
+            logger.log("Found existing team with teamNumber = \(teamNumber)!")
+            return results[0]
+        } else {
+            logger.log("Creating new Team object")
+            let newTeam = Team()
+            newTeam.teamNumber = teamNumber
+            if (teamName.count > 0) {
+                newTeam.teamName = teamName
+            }
+            
+            return newTeam
+        }
+    }
 
     func save() {
         do {
-            let editRecord = TeamResult(context: viewContext)
+            var teamToUse: Team! = nil
+            
+            // Enforce uniqueness on teamNumber
+            if team == nil {
+                // We don't want to allow duplicates, so we need to make sure there's no existing team
+                team = Team.existingTeam(withNumber: teamNumber, context: viewContext)
+                
+                if team != nil {
+                    logger.log("Found an existing team with that number even though the user didn't choose it!")
+                    teamToUse = team
+                    if (teamToUse.teamName != teamName) {
+                        logger.log("Updating existing team name: \(teamToUse.teamName ?? "<empty>") => \(teamName)")
+                        teamToUse.teamName = teamName
+                    }
+                } else {
+                    logger.log("No existing team with that number; creating one!")
+                    teamToUse = Team()
+                    teamToUse.teamName = teamName.count > 0 ? teamName : nil
+                    teamToUse.teamNumber = teamNumber
+                }
+            } else {
+                teamToUse = team
+            }
+            
+            let newResult = TeamResult(context: viewContext)
+            newResult.team = teamToUse
     
-            editRecord.matchDate = matchDate
-            editRecord.alliance = alliance
-            editRecord.canDefend = canDefend
-            editRecord.hangLevel = Int16(hangLevel)
-            editRecord.highGoalPoints = Int16(highGoalPoints)
-            editRecord.lowGoalPoints = Int16(lowGoalPoints)
-            editRecord.teamName = teamName
+            newResult.matchDate = matchDate
+            newResult.alliance = alliance
+            newResult.canDefend = canDefend
+            newResult.hangLevel = Int16(hangLevel)
+            newResult.highGoalPoints = Int16(highGoalPoints)
+            newResult.lowGoalPoints = Int16(lowGoalPoints)
             
             logger.log("Hang level is \(hangLevel)")
             

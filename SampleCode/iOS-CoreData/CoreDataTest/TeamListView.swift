@@ -9,61 +9,36 @@ import CoreData
 import os.log
 import SwiftUI
 
-
-extension TeamResult {
-    // The @FetchRequest property wrapper in the body will call this function
-    static func uniqueTeamNamesFetchRequest() -> NSFetchRequest<NSDictionary> {
-        let request: NSFetchRequest<NSDictionary> = TeamResult.fetchRequest() as! NSFetchRequest<NSDictionary>
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \TeamResult.teamName, ascending: true)]
-        request.returnsDistinctResults = true
-        request.resultType = .dictionaryResultType
-        request.propertiesToFetch = ["teamName"]
-
-        return request
+extension Team {
+    // Helper extension to give us a string to display -- either the actual team name, or a synthesized one
+    // from the team numbrer.
+    var displayName : String {
+        return teamName ?? "Team #\(teamNumber)"
     }
 }
 
-
 struct TeamListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @State private var uniqueTeamNames : [String] = []
+    
+    // With team as a separate entity, we get naturally uniquing.
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.teamNumber)], predicate: nil, animation: .default)
+    private var results: FetchedResults<Team>
     
     private var logger = Logger()
     
     var body: some View {
         VStack {
             List {
-                ForEach($uniqueTeamNames, id:\.self) { name in
+                ForEach(results, id:\.self) { team in
                     NavigationLink {
-                        TeamMetricsView(teamName: name.wrappedValue)
+                        TeamMetricsView(team: team)
                     } label: {
-                        Text("\(name.wrappedValue)")
+                        Text("\(team.displayName)")
                     }
                 }
             }
         }
         .navigationTitle("All Teams")
-        .onAppear() {
-            // Ideally we'd not do this fetch right as we're trying to show the view, as it can slow
-            // down presentation of the view.
-            let fetchRequest = TeamResult.uniqueTeamNamesFetchRequest()
-            do {
-                let teamNames = try viewContext.fetch(fetchRequest)
-                logger.log("Got \(teamNames.count) results")
-                
-                uniqueTeamNames = []
-                for dict in teamNames {
-                    let teamName = dict["teamName"] as! String
-                    uniqueTeamNames.append(teamName)
-                    logger.log("Adding team: \(teamName)")
-                }
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
     }
 }
 

@@ -19,17 +19,14 @@ struct TeamSummary {
     var maxHighGoalPoints = 0
     var maxHangLevel = 0
     
-    var teamName = "Unknown"
-
-    private var teamResults : FetchedResults<TeamResult>
+    private var team: Team
     
-    init(fromFetchResults results: FetchedResults<TeamResult>) {
-        teamResults = results
-        guard results.count > 0 else {
+    init(fromTeam teamToView: Team) {
+        team = teamToView
+        let results = team.results as? Set<TeamResult> // Convert CD's NSSet to Swift
+        guard let results = results else {
             return
         }
-        
-        teamName = results[0].teamName ?? "Missing"
         
         var lowGoalSum = 0
         var highGoalSum = 0
@@ -50,8 +47,16 @@ struct TeamSummary {
         avgHangLevel = Double(hangLevelSum) / recordCount
     }
     
+    
     // A computed property just because
     var numMatches : Int {
-        teamResults.count
+        if let results = team.results {
+            return results.count
+        }
+        return 0
+    }
+    
+    var teamName : String {
+        team.teamName ?? "Team \(team.teamNumber)"
     }
 }

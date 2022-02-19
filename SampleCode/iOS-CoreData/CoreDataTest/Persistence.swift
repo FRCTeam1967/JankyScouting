@@ -13,15 +13,22 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
+        
+        // Create a sample team
+        let newTeam = Team(context: viewContext)
+        newTeam.teamName = "Janksters"
+        newTeam.teamNumber = 1967
+        
+        // Create team results
         for i in 0..<10 {
-            let newItem = TeamResult(context: viewContext)
-            newItem.matchDate = Date()
-            newItem.teamName = "\(i+1)"
-            newItem.lowGoalPoints = Int16.random(in: 100...200)
-            newItem.highGoalPoints = Int16.random(in: 100...200)
-            newItem.hangLevel = 3
-            newItem.canDefend = true
-            newItem.alliance = Bool.random() ? "red" : "blue"
+            let newResult = TeamResult(context: viewContext)
+            newResult.team = newTeam
+            newResult.matchDate = Date()
+            newResult.lowGoalPoints = Int16.random(in: 100...200)
+            newResult.highGoalPoints = Int16.random(in: 100...200)
+            newResult.hangLevel = Int16.random(in: 0...4)
+            newResult.canDefend = Bool.random()
+            newResult.alliance = Bool.random() ? "red" : "blue"
         }
         do {
             try viewContext.save()
@@ -56,6 +63,9 @@ struct PersistenceController {
                 Check the error message to determine what the actual problem was.
                 */
                 fatalError("Unresolved error \(error), \(error.userInfo)")
+            } else {
+                storeDescription.shouldMigrateStoreAutomatically = true
+                storeDescription.shouldInferMappingModelAutomatically = true
             }
         })
     }
