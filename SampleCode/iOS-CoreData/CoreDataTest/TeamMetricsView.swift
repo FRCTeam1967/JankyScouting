@@ -34,9 +34,13 @@ struct TeamMetricsView: View {
     }
     
     var body: some View {
+    
         let teamSummary = TeamSummary(fromFetchResults: results)
-        
+        //VStack{
         return List {
+            NavigationLink("Round by Round") {
+                MetricExpandedView()
+            }
             Section("Hanger Zone") {
                 Text("Average bar: \(teamSummary.avgHangLevel.formatted())")
                 Text("Highest bar achieved: \(teamSummary.maxHangLevel)")

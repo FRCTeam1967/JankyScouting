@@ -15,7 +15,7 @@ extension TeamResult {
     static func uniqueTeamNamesFetchRequest() -> NSFetchRequest<NSDictionary> {
         let request: NSFetchRequest<NSDictionary> = TeamResult.fetchRequest() as! NSFetchRequest<NSDictionary>
         request.sortDescriptors = [NSSortDescriptor(keyPath: \TeamResult.teamName, ascending: true)]
-        request.returnsDistinctResults = true
+       request.returnsDistinctResults = true
         request.resultType = .dictionaryResultType
         request.propertiesToFetch = ["teamName"]
 

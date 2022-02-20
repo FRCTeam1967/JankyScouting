@@ -12,14 +12,25 @@ import SwiftUI
 struct AddResultView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) var dismiss
+    
 
-    @State private var teamName = "1967"
+    @State private var teamName = ""
+    @State private var scoutName = ""
     @State private var alliance = "red"
-    @State private var canDefend = true
+    @State private var canDefend = false
+    @State private var isTallBot = false
+    @State private var didLoseComms = false
     @State private var matchDate = Date.now
     @State private var hangLevel = 1
-    @State private var lowGoalPoints = 2
-    @State private var highGoalPoints = 3
+    @State private var lowGoalPoints = 0
+    @State private var highGoalPoints = 0
+    @State private var shootingPosition = 1
+    @State private var positionList = ["Tarmac Edge", "Fender", "Launchpad", "Did not shoot", "Other"]
+    
+    @State private var defenseRating = 1
+    @State private var maneuverabilityRating = 1
+    @State private var speedRating = 1
+    
     
     private var logger = Logger()
     
@@ -28,11 +39,16 @@ struct AddResultView: View {
             Form {
                 Section {
                     TextField("Team Name", text: $teamName)
+                    TextField("Scout Name", text: $scoutName)
                 } header: {
                     Text("Team")
                 }
+                
                 Section {
-                    DatePicker("Match date", selection: $matchDate, displayedComponents: .date)
+                    HStack{
+                        Image(systemName: "calendar")
+                        DatePicker("Match date", selection: $matchDate, displayedComponents: .date)
+                    }
                     VStack {
                         Text("Alliance Color")
                         Picker("Alliance", selection: $alliance) {
@@ -40,10 +56,46 @@ struct AddResultView: View {
                             Text("Blue").tag("blue")
                         }
                         .pickerStyle(.segmented)
+                             
                     }
-                    Toggle("Defensive capability", isOn: $canDefend)
-                    Stepper("\(lowGoalPoints) low points", value: $lowGoalPoints, in: 0...100)
-                    Stepper("\(highGoalPoints) high points", value: $highGoalPoints, in: 0...100)
+                    HStack{
+                        Image(systemName: "sportscourt")
+                        Toggle("Defensive capability?", isOn: $canDefend).tint(.red)   
+                    }
+                    
+                    HStack{
+                        Image(systemName: "wrench")
+                        Toggle("Tall Bot?", isOn: $isTallBot) .tint(.red)
+                    }
+                } header: {
+                    Text("Prematch")
+                }
+                
+                
+                Section {
+                    HStack{
+                        Image(systemName: "chevron.down.circle")
+                        Stepper("\(lowGoalPoints) low points", value: $lowGoalPoints, in: 0...100)
+                    }
+                    HStack{
+                        Image(systemName: "chevron.up.circle")
+                        Stepper("\(highGoalPoints) high points", value: $highGoalPoints, in: 0...100)
+                    }
+                   
+                    VStack{
+                        HStack {
+                        Text("Shooting Position")
+                        Picker("Position", selection:$shootingPosition) {
+                            //Text("Edge of Tarmac").tag($0)
+                            ForEach(positionList.indices) {
+                              Text(self.positionList[$0])
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        }
+                    }
+                        
+                    
                     VStack {
                         Text("Highest hang level")
                         Picker("Hang Level", selection:$hangLevel) {
@@ -53,9 +105,52 @@ struct AddResultView: View {
                         }
                         .pickerStyle(.segmented)
                     }
+                    HStack {
+                    Image(systemName: "exclamationmark.bubble")
+                    Toggle("Lost Comms", isOn: $didLoseComms) .tint(.red)
+                    }
+                
                 } header: {
                     Text("Match Information")
                 }
+                
+                Section {
+                    
+                    VStack {
+                        Text("Defense Capabilities")
+                        Picker("Defense Capabilities", selection:$defenseRating) {
+                            ForEach(0..<10) {
+                                Text("\($0)").tag($0)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    
+                    VStack {
+                        Text("Maneuverability")
+                        Picker("Maneuverability", selection:$maneuverabilityRating) {
+                            ForEach(0..<10) {
+                                Text("\($0)").tag($0)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    
+                    VStack {
+                        Text("Speed Capabilities")
+                        Picker("Speed", selection:$speedRating) {
+                            ForEach(0..<10) {
+                                Text("\($0)").tag($0)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    
+                    
+                } header: {
+                    Text("Post Match")
+                }
+
             }
             HStack {
                 Button("Save") {

@@ -20,6 +20,7 @@
 		61C3E4AE27AA00CA003B00E2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61C3E4AD27AA00CA003B00E2 /* Preview Assets.xcassets */; };
 		61C3E4B027AA00CA003B00E2 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3E4AF27AA00CA003B00E2 /* Persistence.swift */; };
 		61C3E4B327AA00CA003B00E2 /* CoreDataTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 61C3E4B127AA00CA003B00E2 /* CoreDataTest.xcdatamodeld */; };
+		7396D85527BF17810019E414 /* MetricExpandedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7396D85427BF17810019E414 /* MetricExpandedView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		61C3E4AD27AA00CA003B00E2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		61C3E4AF27AA00CA003B00E2 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		61C3E4B227AA00CA003B00E2 /* CoreDataTest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataTest.xcdatamodel; sourceTree = "<group>"; };
+		7396D85427BF17810019E414 /* MetricExpandedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricExpandedView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				611756B727AF690F00C055D1 /* EditResultView.swift */,
 				611756B927B2190B00C055D1 /* TeamSummary.swift */,
 				61C3E4AF27AA00CA003B00E2 /* Persistence.swift */,
+				7396D85427BF17810019E414 /* MetricExpandedView.swift */,
 				611756BB27B4AE5100C055D1 /* ExportView.swift */,
 				61C3E4AA27AA00CA003B00E2 /* Assets.xcassets */,
 				61C3E4B127AA00CA003B00E2 /* CoreDataTest.xcdatamodeld */,
@@ -173,6 +176,7 @@
 				611756BC27B4AE5200C055D1 /* ExportView.swift in Sources */,
 				61C3E4B027AA00CA003B00E2 /* Persistence.swift in Sources */,
 				611756BA27B2190B00C055D1 /* TeamSummary.swift in Sources */,
+				7396D85527BF17810019E414 /* MetricExpandedView.swift in Sources */,
 				6107A8F727B0620800F90BDC /* TeamListView.swift in Sources */,
 				6107A8F927B0693900F90BDC /* TeamMetricsView.swift in Sources */,
 				61C3E4A927AA00C9003B00E2 /* ResultsListView.swift in Sources */,
